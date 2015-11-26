@@ -18,12 +18,13 @@ print "____________________________________________"
 while (True):
     token, currentChar = get_token(input,currentChar)
 
-    if (token[0] != 'ERRTOKEN'):
-        print token[0],\
-            '           '[0:(11-len(token[0]))],token[1],\
-            '           '[0:(11-len(token[1]))],token[2],\
-            '           '[0:(11-len(str(token[2])))],\
-            token[3]
+    if token[0] != 'ERRTOKEN':
+        if token[0] != 'ENTER':
+            print token[0],\
+                '           '[0:(11-len(token[0]))],token[1],\
+                '           '[0:(11-len(token[1]))],token[2],\
+                '           '[0:(11-len(str(token[2])))],\
+                token[3]
     else:
         break
 

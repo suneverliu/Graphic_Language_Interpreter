@@ -1,18 +1,5 @@
 __author__ = 'Sunever Liu'
 
-
-tokenType = (
-    'ORIGIN', 'SCALE', 'ROT', 'IS',
-    'TO', 'STEP', 'DRAW', 'FOR', 'FROM',
-    'T',
-    'SEMICO', 'L_BRACKET', 'R_BRACKET', 'COMMA',
-    'PLUS', 'MINUS', 'MUL', 'DIV', 'POWER',
-    'FUNC',
-    'CONST_ID',
-    'NONTOKEN',
-    'ERRTOKEN'
-)
-
 tokenTable = (
     ( 'CONST_ID', "PI", 3.1415926, 'NULL' ),
     ( 'CONST_ID', "E", 2.71828, 'NULL' ),

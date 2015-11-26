@@ -9,7 +9,7 @@ def get_token(input, currentChar):
     if char == ' ':
         char = input.read(1)
 
-        while(char < 40):
+        while(char < 40 or char == '\n'):
             char = input.read(1)
 
     tokenBuffer += char
@@ -46,6 +46,7 @@ def get_token(input, currentChar):
         char = input.read(1)
         if(char == '/'):
             input.readline()
+            return ('ENTER', '', 0.0, 'NULL'), char
         else:
             return ('DIV', '/', 0.0, 'NULL'), char
 
@@ -53,6 +54,7 @@ def get_token(input, currentChar):
         char = input.read(1)
         if(char == '-'):
             input.readline()
+            ('ENTER', '', 0.0, 'NULL'), char
         else:
             return ('MINUS', '-', 0.0, 'NULL'), char
 
@@ -71,5 +73,8 @@ def get_token(input, currentChar):
     elif char == ')':
         char = input.read(1)
         return ('R_BRACKET', ')', 0.0, 'NULL'), char
+    elif char == '\n':
+        char = input.read(1)
+        return ('ENTER', 'ENTER', 0.0, 'NULL'), char
     else:
         return ('ERRTOKEN', '', 0.0, 'NULL'), char

@@ -1,6 +1,7 @@
+from init import tokenTable
+
 __author__ = 'Sunever Liu'
 
-from init import tokenTable
 
 def get_token(input, currentChar):
     tokenBuffer = ""
@@ -9,7 +10,7 @@ def get_token(input, currentChar):
     if char == ' ':
         char = input.read(1)
 
-        while(char < 40 or char == '\n'):
+        while char < 40 or char == '\n':
             char = input.read(1)
 
     tokenBuffer += char
@@ -17,19 +18,18 @@ def get_token(input, currentChar):
     if char.isalpha():
         char = input.read(1)
 
-        while (char.isalpha()):
+        while char.isalpha():
             tokenBuffer = tokenBuffer + char
             char = input.read(1)
 
-
         for item in tokenTable:
-            if tokenBuffer == item[1]:
+            if tokenBuffer.upper() == item[1]:
                 return item, char
 
     elif char.isdigit():
         char = input.read(1)
 
-        while (char.isdigit()):
+        while char.isdigit():
             tokenBuffer = tokenBuffer + char
             char = input.read(1)
 
@@ -37,24 +37,27 @@ def get_token(input, currentChar):
 
     elif char == '*':
         char = input.read(1)
-        if(char == '*'):
+        if char == '*':
+            char = input.read(1)
             return ('POW', '**', 0.0, 'NULL'), char
         else:
             return ('MUL', '*', 0.0, 'NULL'), char
 
     elif char == '/':
         char = input.read(1)
-        if(char == '/'):
+        if char == '/':
             input.readline()
+            char = input.read(1)
             return ('ENTER', '', 0.0, 'NULL'), char
         else:
             return ('DIV', '/', 0.0, 'NULL'), char
 
     elif char == '-':
         char = input.read(1)
-        if(char == '-'):
+        if char == '-':
             input.readline()
-            ('ENTER', '', 0.0, 'NULL'), char
+            char = input.read(1)
+            return ('ENTER', '', 0.0, 'NULL'), char
         else:
             return ('MINUS', '-', 0.0, 'NULL'), char
 
@@ -77,4 +80,4 @@ def get_token(input, currentChar):
         char = input.read(1)
         return ('ENTER', 'ENTER', 0.0, 'NULL'), char
     else:
-        return ('ERRTOKEN', '', 0.0, 'NULL'), char
+        return ('NONTOKEN', '', 0.0, 'NULL'), char

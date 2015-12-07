@@ -1,33 +1,34 @@
 # -*- coding: utf-8 -*-
+from Parser import Parser
 __author__ = 'Sunever Liu'
 
-from tokenizer import get_token
+# from tokenizer import get_token
 
 filename = "testfile.txt"
-
 input = open(filename)
-
-currentChar = ' '
-
 if input == 0:
     print "The file can't be opened!"
 
-print u"记号类别    字符串      常数值      函数指针"
-print "____________________________________________"
+# currentChar = ' '
 
-while (True):
-    token, currentChar = get_token(input,currentChar)
 
-    if token[0] != 'ERRTOKEN':
-        if token[0] != 'ENTER':
-            print token[0],\
-                '           '[0:(11-len(token[0]))],token[1],\
-                '           '[0:(11-len(token[1]))],token[2],\
-                '           '[0:(11-len(str(token[2])))],\
-                token[3]
-    else:
-        break
+# print u"记号类别    字符串      常数值      函数指针"
+# print "____________________________________________"
 
-print  "____________________________________________"
+# while True:
+Parser(input)
+    # token, currentChar = get_token(input,currentChar)
+    #
+    # if token[0] != 'NONTOKEN':
+    #     if token[0] != 'ENTER':
+    #         print token[0],\
+    #             '           '[0:(11-len(token[0]))],token[1],\
+    #             '           '[0:(11-len(token[1]))],token[2],\
+    #             '           '[0:(11-len(str(token[2])))],\
+    #             token[3]
+    # else:
+    #     break
+
+# print  "____________________________________________"
 
 input.close()

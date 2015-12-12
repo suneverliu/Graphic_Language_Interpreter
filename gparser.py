@@ -2,10 +2,23 @@ import os
 import types
 from init import ExprNode
 from tokenizer import get_token
+from drawer import GetExprValue
 
 token = ()
 current_char = " "
 input = None
+
+Parameter = 'T'
+Origin_x = 0.0
+Origin_y = 0.0
+Rot_ang = 0.0
+Scale_x = 1
+Scale_y = 1
+Start = 0.0
+End = 0.0
+Step = 0.0
+x_ptr = "sin"
+y_ptr = "cos"
 
 
 def FetchToken():
@@ -21,6 +34,7 @@ def FetchToken():
 
 def MatchToken(true_token):
     global token
+
     if token[0] == true_token:
         FetchToken()
     else:
@@ -40,12 +54,12 @@ def SyntaxError(error_num):
 
 def Program():
     global token
-    tree_list = []
 
     while token[0] != "NONTOKEN":
-        tree_list.extend(Statement())
+        Statement()
         MatchToken("SEMICO")
-    return tree_list
+
+
 def Statement():
     global token
 
@@ -60,57 +74,54 @@ def Statement():
 
 
 def OriginStatement():
-    tree_list = []
+    global Origin_x, Origin_y
+
     MatchToken("ORIGIN")
     MatchToken("IS")
     MatchToken("L_BRACKET")
-    tree_list.append(Expression())
+    Origin_x = GetExprValue(Expression())
     MatchToken("COMMA")
-    tree_list.append(Expression())
+    Origin_y = GetExprValue(Expression())
     MatchToken("R_BRACKET")
 
-    return tree_list
 
 def RotStatement():
-    tree_list = []
+    global Rot_ang
+
     MatchToken("ROT")
     MatchToken("IS")
-    tree_list.append(Expression())
+    Rot_ang = GetExprValue(Expression())
 
-    return tree_list
 
 
 def ScaleStatement():
-    tree_list = []
+    global Scale_x, Scale_y
+
     MatchToken("SCALE")
     MatchToken("IS")
     MatchToken("L_BRACKET")
-    tree_list.append(Expression())
+    Scale_x = GetExprValue(Expression())
     MatchToken("COMMA")
-    tree_list.append(Expression())
+    Scale_y = GetExprValue(Expression())
     MatchToken("R_BRACKET")
-
-    return tree_list
 
 
 def ForStatement():
-    tree_list = []
+    global Start, End, Step, x_ptr, y_ptr
     MatchToken("FOR")
     MatchToken("T")
     MatchToken("FROM")
-    tree_list.append(Expression())
+    Start = GetExprValue(Expression())
     MatchToken("TO")
-    tree_list.append(Expression())
+    End = GetExprValue(Expression())
     MatchToken("STEP")
-    tree_list.append(Expression())
+    Step = GetExprValue(Expression())
     MatchToken("DRAW")
     MatchToken("L_BRACKET")
-    tree_list.append(Expression())
+    x_ptr = GetExprValue(Expression())
     MatchToken("COMMA")
-    tree_list.append(Expression())
+    y_ptr = GetExprValue(Expression())
     MatchToken("R_BRACKET")
-
-    return list_tree
 
 
 def Expression():
@@ -166,23 +177,25 @@ def Component():
 
 
 def Atom():
-    global token
+    global token, Parameter
 
     left = None
     if token[0] == "CONST_ID":
         token_tmp = token[0]
+        token_num = token[2]
         MatchToken(token_tmp)
-        left = ExprNode("CONST_ID", token[2])
+        left = ExprNode("CONST_ID", token_num)
     elif token[0] == "T":
         token_tmp = token[0]
         MatchToken(token_tmp)
-        left = ExprNode("T", None)
+        left = ExprNode("T", Parameter)
     elif token[0] == "FUNC":
+        func_name = token[3]
         MatchToken("FUNC")
         MatchToken("L_BRACKET")
         child = Expression()
         MatchToken("R_BRACKET")
-        left = ExprNode("FUNC", token[3], child)
+        left = ExprNode("FUNC", func_name, child)
     elif token[0] == "L_BRACKET":
         MatchToken("L_BRACKET")
         left = Expression()
@@ -194,27 +207,31 @@ def Atom():
 
 
 
-def down(root, level):
-    sub_level = level
-    if root.__str__ == "NULL" or root.__str__ == "None" or type(root) is types.StringType or type(root) is types.NoneType or type(root) is types.FloatType:
-        return
-    print "\t\t\t\t"[0:level] + str(root)
+# def down(root, level):
+#     sub_level = level
+#     if root.__str__ == "NULL" or root.__str__ == "None" or type(root) is types.StringType or type(root) is types.NoneType or type(root) is types.FloatType or type(root) is types.IntType:
+#         return
+#     print "\t\t\t\t"[0:level] + str(root) + ' ' + str(root.content.values())
+#
+#     for item in root.content.values():
+#         down(item, sub_level+1)
 
-    for item in root.content.values():
-        down(item, sub_level+1)
 
-
-def show(tree_list):
-    level = 0
-    for root in tree_list:
-        print "\n" + "this is tree of " + str(tree_list.index(root))
-        down(root,level)
+# def show(tree_list):
+#     level = 0
+#     for root in tree_list:
+#         print "\n" + "this is tree of " + str(tree_list.index(root))
+#         down(root,level)
+#         print GetExprValue(root)
 
 def Parser(table_input):
     global input
-    tree_list = []
+    # tree_list = []
 
     input = table_input
     FetchToken()
-    tree_list.extend(Program())
-    show(tree_list)
+    Program()
+
+    print "END!"
+    # tree_list.extend(Program())
+    # show(tree_list)

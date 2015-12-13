@@ -11,11 +11,26 @@ def GetExprValue(root):
     if root is None:
         return 0.0
     if root.opCode == "PLUS":
-        return GetExprValue(root.content["Left"]) + GetExprValue(root.content["Right"])
+        left = GetExprValue(root.content["Left"])
+        right = GetExprValue(root.content["Right"])
+
+        # if isinstance(left, str) or isinstance(right, str):
+        #     return left + '+' + right
+        return left + right
     elif root.opCode == "MINUS":
-        return GetExprValue(root.content["Left"]) - GetExprValue(root.content["Right"])
+        left = GetExprValue(root.content["Left"])
+        right = GetExprValue(root.content["Right"])
+
+        if isinstance(left, str) or isinstance(right, str):
+            return str(left) + '-' + str(right)
+        return left - right
     elif root.opCode == "MUL":
-        return GetExprValue(root.content["Left"]) * GetExprValue(root.content["Right"])
+        left = GetExprValue(root.content["Left"])
+        right = GetExprValue(root.content["Right"])
+
+        # if isinstance(left, str) or isinstance(right, str):
+        #     return str(left) + '*' + str(right)
+        return left * right
     elif root.opCode == "DIV":
         left = GetExprValue(root.content["Left"])
         right = GetExprValue(root.content["Right"])
@@ -43,40 +58,60 @@ def GetExprValue(root):
 
 def draw():
     fig = plt.figure(figsize=(10,10), facecolor='gray')
-    ax = fig.add_axes([0,0,0.5,0.5], frameon=False, aspect=1)
+    ax = fig.add_axes([0,0,1,1], frameon=True, aspect=1)
+    plt.xlim(0,1000)
+    plt.ylim(0,1000)
 
-    x_seq = np.arange(gparser.Start, gparser.End, gparser.Step)
-    y_seq = np.arange(gparser.Start, gparser.End, gparser.Step)
+    seq = np.arange(gparser.Start, gparser.End, gparser.Step)
 
     x_new = gparser.x_ptr
     y_new = gparser.y_ptr
 
-    if x_new in ["cos", "sin", "tan", "log", "sqrt", "exp"]:
-        exec("x_new = " + gparser.x_ptr + '(' + 'x_seq' + ')')
-    elif x_new == 'T':
-        x_new = x_seq
+    print x_new
+    print y_new
+
+    if x_new == 'T':
+        x_new = seq
+    elif x_new[0] == '0':
+        if x_new[-1] == 'T':
+            exec("x_new = " + '-' + 'seq')
+        else:
+            exec("x_new = " + '-' + gparser.x_ptr[4:] + '(' + 'seq' + ')')
+    elif isinstance(x_new, str):
+        exec("x_new = " + gparser.x_ptr + '(' + 'seq' + ')')
     else:
-        for index in range(len(x_seq)):
-            x_seq[index] = int(x_new)
-        x_new = x_seq
-    if y_new in ["cos", "sin", "tan", "log", "sqrt", "exp"]:
-        exec("y_new = " + gparser.y_ptr + '(' + 'y_seq' + ')')
-    elif y_new == 'T':
-        y_new = y_seq
+        for index in range(len(seq)):
+            seq[index] = int(x_new)
+        x_new = seq
+
+
+
+    if y_new == 'T':
+        y_new = seq
+    elif y_new[0] == '0':
+        if y_new[-1] == 'T':
+            exec("y_new = " + '-' + 'seq')
+        else:
+            exec("y_new = " + '-' + gparser.y_ptr[4:] + '(' + 'seq' + ')')
+    elif isinstance(y_new, str):
+        exec("y_new = " + gparser.y_ptr+ '(' + 'seq' + ')')
     else:
-        for index in range(len(y_seq)):
-            y_seq[index] = int(y_new)
-        y_new = y_seq
+        for index in range(len(seq)):
+            seq[index] = int(y_new)
+        y_new = seq
+
+
+    print x_new, y_new
 
     for index in range(len(x_new)):
-        x_new[index] = (x_new[index] * gparser.Scale_x + gparser.Origin_x) / 100.0
+        x_new[index] = (x_new[index] * gparser.Scale_x + gparser.Origin_x)
 
-    print x_new
 
     for index in range(len(y_new)):
-        y_new[index] = (y_new[index] * gparser.Scale_y + gparser.Origin_y) / 100.0
+        y_new[index] = (y_new[index] * gparser.Scale_y + gparser.Origin_y)
 
-    print y_new
+
+    print x_new, y_new
 
     ax.plot(x_new, y_new)
 

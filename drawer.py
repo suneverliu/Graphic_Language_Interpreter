@@ -14,46 +14,62 @@ def GetExprValue(root):
         left = GetExprValue(root.content["Left"])
         right = GetExprValue(root.content["Right"])
 
-        # if isinstance(left, str) or isinstance(right, str):
-        #     return left + '+' + right
+        if isinstance(left, str) or isinstance(right, str):
+            return '(' + left + '+' + right + ')'
         return left + right
     elif root.opCode == "MINUS":
         left = GetExprValue(root.content["Left"])
         right = GetExprValue(root.content["Right"])
 
         if isinstance(left, str) or isinstance(right, str):
-            return str(left) + '-' + str(right)
+            return '(' + str(left) + '-' + str(right) + ')'
+
         return left - right
     elif root.opCode == "MUL":
         left = GetExprValue(root.content["Left"])
         right = GetExprValue(root.content["Right"])
 
-        # if isinstance(left, str) or isinstance(right, str):
-        #     return str(left) + '*' + str(right)
+        if isinstance(left, str) or isinstance(right, str):
+            return '(' + str(left) + '*' + str(right) + ')'
         return left * right
     elif root.opCode == "DIV":
         left = GetExprValue(root.content["Left"])
         right = GetExprValue(root.content["Right"])
+
+        if isinstance(left, str) or isinstance(right, str):
+            return '(' + str(left) + '/' + str(right) + ')'
+
         if right == 0:
             return left
         else:
             return left / right
     elif root.opCode == "POW":
-        return pow(int(GetExprValue(root.content["Left"])), GetExprValue(root.content["Right"]))
+        left = GetExprValue(root.content["Left"])
+        right = GetExprValue(root.content["Right"])
+
+        if isinstance(left, str) or isinstance(right, str):
+            return '(' + str(left) + '**' + str(right) + ')'
+
+        return pow(int(left), right)
     elif root.opCode == "FUNC":
         if root.content["Child"].opCode == "T":
-            return root.content["MathFuncPtr"]
+            return root.content["MathFuncPtr"] + "(T)"
+
+        child = GetExprValue(root.content["Child"])
+
+        if isinstance(child, str):
+            return root.content["MathFuncPtr"] + child
+
+
         temp = 0
         exec("temp = " + str(root.content["MathFuncPtr"]) + '(' + str(GetExprValue(root.content["Child"])) + ')')
         return temp
+
     elif root.opCode == "CONST_ID":
         return root.content["CaseConst"]
+
     elif root.opCode == "T":
-        if root.content["CaseParmPtr"] is None:
-            return 1
-        return root.content["CaseParmPtr"]
-    else:
-        return 0.0
+        return "T"
 
 
 def draw():
@@ -67,51 +83,76 @@ def draw():
     x_new = gparser.x_ptr
     y_new = gparser.y_ptr
 
+    # x_new = x_new.strip('(')
+    # if x_new[0] == '0':
+    #     x_new = x_new[0:-1]
+    #
+    # y_new = y_new.strip('(')
+    # if y_new[0] == '0':
+    #     y_new = y_new[0:-1]
+
     print x_new
     print y_new
 
+    # if x_new == 'T':
+    #     x_new = seq
+    # elif x_new[0] == '0':
     if x_new == 'T':
-        x_new = seq
-    elif x_new[0] == '0':
-        if x_new[-1] == 'T':
-            exec("x_new = " + '-' + 'seq')
-        else:
-            exec("x_new = " + '-' + gparser.x_ptr[4:] + '(' + 'seq' + ')')
-    elif isinstance(x_new, str):
-        exec("x_new = " + gparser.x_ptr + '(' + 'seq' + ')')
+        x_new = 'seq'
     else:
-        for index in range(len(seq)):
-            seq[index] = int(x_new)
-        x_new = seq
+        while x_new.find('T') > 0:
+            x_new = x_new[0:x_new.find('T')] + 'seq' + x_new[x_new.find('T')+1:]
 
+    exec("x_new = " + x_new)
 
-
-    if y_new == 'T':
-        y_new = seq
-    elif y_new[0] == '0':
-        if y_new[-1] == 'T':
-            exec("y_new = " + '-' + 'seq')
-        else:
-            exec("y_new = " + '-' + gparser.y_ptr[4:] + '(' + 'seq' + ')')
-    elif isinstance(y_new, str):
-        exec("y_new = " + gparser.y_ptr+ '(' + 'seq' + ')')
+    if x_new == 'T':
+        x_new = 'seq'
     else:
-        for index in range(len(seq)):
-            seq[index] = int(y_new)
-        y_new = seq
+        while y_new.find('T') > 0:
+            y_new = y_new[0:y_new.find('T')] + 'seq' + y_new[y_new.find('T')+1:]
+
+    exec("y_new = " + y_new)
+    # elif isinstance(x_new, str):
+    #     x_new = x_new[0:x_new.find('T')] + 'seq' + x_new[x_new.find('T')+1:]
+    #     exec("x_new = " + x_new)
+    # else:
+    #     for index in range(len(seq)):
+    #         seq[index] = int(x_new)
+    #     x_new = seq
+
+
+
+    # if y_new == 'T':
+    #     y_new = seq
+    # elif y_new[0] == '0':
+    #     if y_new[-1] == 'T' and len(y_new) < 9:
+    #         exec("y_new = " + '-' + 'seq')
+    #     else:
+    #         y_new = y_new[0:y_new.find('T')] + 'seq' + y_new[y_new.find('T')+1:]
+    #         exec("y_new = " + y_new[4:])
+    # elif isinstance(y_new, str):
+    #     y_new = y_new[0:y_new.find('T')] + 'seq' + y_new[y_new.find('T')+1:]
+    #     exec("y_new = " + y_new)
+    # else:
+    #     for index in range(len(seq)):
+    #         seq[index] = int(y_new)
+    #     y_new = seq
 
 
     print x_new, y_new
 
-    for index in range(len(x_new)):
-        x_new[index] = (x_new[index] * gparser.Scale_x + gparser.Origin_x)
+    for index in range(len(seq)):
+        x_new[index] = x_new[index] * gparser.Scale_x
+        y_new[index] = y_new[index] * gparser.Scale_y
+        temp = x_new[index] * cos(gparser.Rot_ang) + y_new[index] * sin(gparser.Rot_ang)
+        y_new[index] = y_new[index] * cos(gparser.Rot_ang) - x_new[index] * sin(gparser.Rot_ang)
+        x_new[index] = temp
+        x_new[index] = x_new[index] + gparser.Origin_x
+        y_new[index] = y_new[index] + gparser.Origin_y
 
 
-    for index in range(len(y_new)):
-        y_new[index] = (y_new[index] * gparser.Scale_y + gparser.Origin_y)
 
-
-    print x_new, y_new
+    print len(x_new), len(y_new)
 
     ax.plot(x_new, y_new)
 

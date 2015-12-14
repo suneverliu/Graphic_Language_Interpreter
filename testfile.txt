@@ -1,10 +1,11 @@
 --FOR T FROM 0 TO 2*PI STEP PI+50 //DRAW (COS(T),SIN(T));
 --FOR T FROM 0 TO 2*PI STEP PI+50 DRAW (COS(T),SIN(T));
-origin is (500, 200);
-rot is pi/6;
+origin is (500, 500);
+rot is 3*pi/2;
 scale is (100, 100);
 --for t from -100 to 100 step 1 draw (t, 0);
 --for t from -100 to 100 step 1 draw (0, t);
 --scale is (200, 100);
-for t from 0 to 6*pi step pi/50 draw (-cos(t),-sin(t));
-rot is -16+5**3/cos(0);
+for t from 0 to 6*pi step pi/50 draw (2*cos(t)-cos(2*t),2*sin(t)-sin(2*t));
+--for t from 0 to 6*pi step pi/50 draw (-cos(3**t),-sin(t));
+--for t from 0 to 6*pi step pi/50 draw (t, 2*t);

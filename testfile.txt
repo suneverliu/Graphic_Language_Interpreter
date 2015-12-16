@@ -2,10 +2,10 @@
 --FOR T FROM 0 TO 2*PI STEP PI+50 DRAW (COS(T),SIN(T));
 origin is (500, 500);
 --rot is 3*pi/2;
+--scale is (10, 10);
 scale is (100, 100);
-for t from -100 to 100 step 1 draw (t, 1);
-for t from -100 to 100 step 1 draw (1, t);
+--for t from -100 to 100 step 1 draw (sin(1080*t+100), sin(360*t)); -- haha graph
+for t from -100 to 100 step 1 draw (4 * cos ( t *(5*360)), 4 * sin ( t *(5*360))); --sun graph
 --scale is (200, 100);
-for t from 0 to 6*pi step pi/50 draw (2*cos(t)-cos(2*t),2*sin(t)-sin(2*t));
-for t from 0 to 6*pi step pi/50 draw (-cos(3**t),-sin(t));
-for t from 0 to 6*pi step pi/50 draw (t, (2-1)*t);
+--for t from 0 to 6*pi step pi/50 draw (5*(cos(t*360))**3, 5*(sin(t*360))**3); -- star graph
+--for t from 0 to 6*pi step pi/50 draw (10*cos(60*t)+pi*10*60*t/180*sin(60*t),10*sin(60*t)-pi*10*60*t/180*cos(60*t));-- rad star graph

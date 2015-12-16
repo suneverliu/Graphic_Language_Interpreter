@@ -19,7 +19,7 @@ def GetExprValue(root):
         right = GetExprValue(root.content["Right"])
 
         if isinstance(left, str) or isinstance(right, str):
-            return '(' + left + '+' + right + ')'
+            return '(' + str(left) + '+' + str(right) + ')'
         return left + right
     elif root.opCode == "MINUS":
         left = GetExprValue(root.content["Left"])

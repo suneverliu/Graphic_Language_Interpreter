@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from gparser import Parser
-from drawer import draw
+from drawer import draw, show
 __author__ = 'Sunever Liu'
 
 # from tokenizer import get_token
@@ -17,8 +17,9 @@ if input == 0:
 # print "____________________________________________"
 
 # while True:
-Parser(input)
-draw()
+if __name__ == "__main__":
+    Parser(input)
+    show()
     # token, currentChar = get_token(input,currentChar)
     #
     # if token[0] != 'NONTOKEN':

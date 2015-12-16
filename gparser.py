@@ -1,8 +1,7 @@
 import os
-import types
 from init import ExprNode
 from tokenizer import get_token
-from drawer import GetExprValue
+from drawer import GetExprValue, draw
 
 token = ()
 current_char = " "
@@ -16,7 +15,7 @@ Scale_x = 1
 Scale_y = 1
 Start = 0.0
 End = 0.0
-Step = 0.0
+Step = None
 x_ptr = "sin"
 y_ptr = "cos"
 
@@ -122,6 +121,7 @@ def ForStatement():
     MatchToken("COMMA")
     y_ptr = GetExprValue(Expression())
     MatchToken("R_BRACKET")
+    draw()
 
 
 def Expression():

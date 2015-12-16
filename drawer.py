@@ -6,6 +6,10 @@ import gparser
 
 __author__ = 'Sunever Liu'
 
+fig = plt.figure(figsize=(10,10), facecolor='gray')
+ax = fig.add_axes([0,0,1,1], frameon=True, aspect=1)
+plt.xlim(0,1000)
+plt.ylim(0,1000)
 
 def GetExprValue(root):
     if root is None:
@@ -73,11 +77,6 @@ def GetExprValue(root):
 
 
 def draw():
-    fig = plt.figure(figsize=(10,10), facecolor='gray')
-    ax = fig.add_axes([0,0,1,1], frameon=True, aspect=1)
-    plt.xlim(0,1000)
-    plt.ylim(0,1000)
-
     seq = np.arange(gparser.Start, gparser.End, gparser.Step)
 
     x_new = gparser.x_ptr
@@ -97,21 +96,32 @@ def draw():
     # if x_new == 'T':
     #     x_new = seq
     # elif x_new[0] == '0':
-    if x_new == 'T':
-        x_new = 'seq'
+    if isinstance(x_new, str):
+        if x_new == 'T':
+            x_new = 'seq'
+        else:
+            while x_new.find('T') > 0:
+                x_new = x_new[0:x_new.find('T')] + 'seq' + x_new[x_new.find('T')+1:]
+        exec("x_new = " + x_new)
     else:
-        while x_new.find('T') > 0:
-            x_new = x_new[0:x_new.find('T')] + 'seq' + x_new[x_new.find('T')+1:]
+        temp = x_new
+        x_new = []
+        for index in range(len(seq)):
+            x_new.append(temp)
 
-    exec("x_new = " + x_new)
 
-    if x_new == 'T':
-        x_new = 'seq'
+    if isinstance(y_new, str):
+        if y_new == 'T':
+            y_new = 'seq'
+        else:
+            while y_new.find('T') > 0:
+                y_new = y_new[0:y_new.find('T')] + 'seq' + y_new[y_new.find('T')+1:]
+        exec("y_new = " + y_new)
     else:
-        while y_new.find('T') > 0:
-            y_new = y_new[0:y_new.find('T')] + 'seq' + y_new[y_new.find('T')+1:]
-
-    exec("y_new = " + y_new)
+        temp = y_new
+        y_new = []
+        for index in range(len(seq)):
+            y_new.append(temp)
     # elif isinstance(x_new, str):
     #     x_new = x_new[0:x_new.find('T')] + 'seq' + x_new[x_new.find('T')+1:]
     #     exec("x_new = " + x_new)
@@ -159,4 +169,6 @@ def draw():
     ax.set_xticks([])
     ax.set_yticks([])
 
+
+def show():
     plt.show()

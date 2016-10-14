@@ -2,5 +2,5 @@
 .idea/
 
 # Python Byte-compiled files
-*.pc[cod]
+*.py[cod]
 *$py.class

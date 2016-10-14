@@ -1,0 +1,6 @@
+# PyCharm project files
+.idea/
+
+# Python Byte-compiled files
+*.pc[cod]
+*$py.class
